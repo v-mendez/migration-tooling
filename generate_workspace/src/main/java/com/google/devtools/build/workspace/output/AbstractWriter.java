@@ -76,7 +76,7 @@ public abstract class AbstractWriter {
     if (!dependencies.isEmpty()) {
       builder.append(indent).append("    runtime_deps = [" + lineSeparator);
       for (Rule r : rule.getDependencies()) {
-        builder.append(indent).append("        \":").append(r.name()).append(ending);
+        builder.append(indent).append("        \":").append(rulePrefix).append(r.name()).append(ending);
       }
       builder.append(indent).append("    ]," + lineSeparator);
     }
