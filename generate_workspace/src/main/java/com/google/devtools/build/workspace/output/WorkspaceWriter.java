@@ -65,11 +65,11 @@ public class WorkspaceWriter extends AbstractWriter {
   }
 
   @Override
-  public void write(Collection<Rule> rules) {
+  public void write(Collection<Rule> rules, String prefix) {
     try (PrintStream workspaceStream = new PrintStream(workspaceFile);
         PrintStream buildStream = new PrintStream(buildFile)) {
-      writeWorkspace(workspaceStream, rules);
-      writeBuild(buildStream, rules);
+      writeWorkspace(workspaceStream, rules, prefix);
+      writeBuild(buildStream, rules, prefix);
     } catch (IOException e) {
       logger.severe(
           "Could not write WORKSPACE and BUILD files to " + buildFile.getParent() + ": "
@@ -82,17 +82,17 @@ public class WorkspaceWriter extends AbstractWriter {
   /**
    * Writes all resolved dependencies in WORKSPACE file format to the outputStream.
    */
-  public void writeWorkspace(PrintStream outputStream, Collection<Rule> rules) {
+  public void writeWorkspace(PrintStream outputStream, Collection<Rule> rules, String prefix) {
     writeHeader(outputStream, args);
     for (Rule rule : rules) {
-      outputStream.println(formatMavenJar(rule, "maven_jar", ""));
+      outputStream.println(formatMavenJar(rule, "maven_jar", "", prefix));
     }
   }
 
-  public void writeBuild(PrintStream outputStream, Collection<Rule> rules) {
+  public void writeBuild(PrintStream outputStream, Collection<Rule> rules, String prefix) {
     writeHeader(outputStream, args);
     for (Rule rule : rules) {
-      outputStream.println(formatJavaLibrary(rule, "java_library", ""));
+      outputStream.println(formatJavaLibrary(rule, "java_library", "", prefix));
     }
   }
 }

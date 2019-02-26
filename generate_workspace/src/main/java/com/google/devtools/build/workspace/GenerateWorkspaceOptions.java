@@ -41,6 +41,12 @@ public class GenerateWorkspaceOptions {
   private boolean help;
 
   @Parameter(
+          names = {"--prefix", "-p"},
+          description = "Repository prefix. Allow multiple maven repositories"
+  )
+  public String prefix="";
+
+  @Parameter(
     names = {"--maven_project", "-m"},
     description = "Directory containing a Maven project."
   )

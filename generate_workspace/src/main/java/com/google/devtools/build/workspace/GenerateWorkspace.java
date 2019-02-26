@@ -65,7 +65,7 @@ public class GenerateWorkspace {
               options.aliases);
       workspaceFileGenerator.generateFromPom(options.mavenProjects, options.scopes);
       workspaceFileGenerator.generateFromArtifacts(options.artifacts);
-      workspaceFileGenerator.writeResults();
+      workspaceFileGenerator.writeResults(options.prefix);
     } catch (IOException e) {
       logger.severe(e.getMessage());
       System.exit(1);
@@ -108,7 +108,7 @@ public class GenerateWorkspace {
     return Paths.get(System.getProperty("user.dir")).resolve(path).toString();
   }
 
-  private void writeResults() {
-    resultWriter.write(resolver.getRules());
+  private void writeResults(String prefix) {
+    resultWriter.write(resolver.getRules(), prefix);
   }
 }

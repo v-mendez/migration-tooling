@@ -23,7 +23,7 @@ import java.util.Set;
  * Basic implementation for output writers.
  */
 public abstract class AbstractWriter {
-  public abstract void write(Collection<Rule> rules);
+  public abstract void write(Collection<Rule> rules, String prefix);
 
   private static final String lineSeparator = System.lineSeparator();
   /**
@@ -36,7 +36,7 @@ public abstract class AbstractWriter {
     outputStream.print(String.format("%n%n"));
   }
 
-  protected String formatMavenJar(Rule rule, String ruleName, String indent) {
+  protected String formatMavenJar(Rule rule, String ruleName, String indent, String rulePrefix) {
     if (rule.aliased()) {
       // If the rule was aliased, then it is already declared somewhere else and we don't need to
       // declare it again.
@@ -48,7 +48,7 @@ public abstract class AbstractWriter {
       builder.append(indent).append("# ").append(parent).append(lineSeparator);
     }
     builder.append(indent).append(ruleName).append("(" + lineSeparator);
-    builder.append(indent).append("    name = \"").append(rule.name()).append(ending);
+    builder.append(indent).append("    name = \"").append(rulePrefix).append(rule.name()).append(ending);
     builder.append(indent).append("    artifact = \"").append(rule.toMavenArtifactString())
         .append(ending);
     if (rule.hasCustomRepository()) {
@@ -65,11 +65,11 @@ public abstract class AbstractWriter {
   /**
    * Write library rules to depend on the transitive closure of all of these rules.
    */
-  protected String formatJavaLibrary(Rule rule, String ruleName, String indent) {
+  protected String formatJavaLibrary(Rule rule, String ruleName, String indent, String rulePrefix) {
     StringBuilder builder = new StringBuilder();
     String ending = "\"," + lineSeparator;
     builder.append(indent).append(ruleName).append("(" + lineSeparator);
-    builder.append(indent).append("    name = \"").append(rule.name()).append(ending);
+    builder.append(indent).append("    name = \"").append(rulePrefix).append(rule.name()).append(ending);
     builder.append(indent).append("    visibility = [\"//visibility:public\"]," + lineSeparator);
     builder.append(indent).append("    exports = [\"@").append(rule.name()).append("//jar\"]," + lineSeparator);
     Set<Rule> dependencies = rule.getDependencies();

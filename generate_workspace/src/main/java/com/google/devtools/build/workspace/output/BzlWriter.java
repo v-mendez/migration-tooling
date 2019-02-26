@@ -44,7 +44,7 @@ public class BzlWriter extends AbstractWriter {
   }
 
   @Override
-  public void write(Collection<Rule> rules) {
+  public void write(Collection<Rule> rules, String prefix) {
     try {
       createParentDirectory(generatedFile);
     } catch (IOException | NullPointerException e) {
@@ -52,7 +52,7 @@ public class BzlWriter extends AbstractWriter {
       return;
     }
     try (PrintStream outputStream = new PrintStream(generatedFile.toFile())) {
-      writeBzl(outputStream, rules);
+      writeBzl(outputStream, rules, prefix);
     } catch (FileNotFoundException e) {
       logger.severe("Could not write " + generatedFile + ": " + e.getMessage());
       return;
@@ -60,24 +60,24 @@ public class BzlWriter extends AbstractWriter {
     System.err.println("Wrote " + generatedFile.toAbsolutePath());
   }
 
-  private void writeBzl(PrintStream outputStream, Collection<Rule> rules) {
+  private void writeBzl(PrintStream outputStream, Collection<Rule> rules, String prefix) {
     writeHeader(outputStream, argv);
-    outputStream.println("def generated_maven_jars():");
+    outputStream.println(String.format("def %sgenerated_maven_jars():", prefix));
     if (rules.isEmpty()) {
       outputStream.println(String.format("  pass%n"));
     }
     for (Rule rule : rules) {
-      outputStream.println(formatMavenJar(rule, "native.maven_jar", "  "));
+      outputStream.println(formatMavenJar(rule, "native.maven_jar", "  ", prefix));
     }
 
     outputStream.append(String.format("%n%n"));
 
-    outputStream.println("def generated_java_libraries():");
+    outputStream.println(String.format("def %sgenerated_java_libraries():", prefix));
     if (rules.isEmpty()) {
       outputStream.println(String.format("  pass%n"));
     }
     for (Rule rule : rules) {
-      outputStream.println(formatJavaLibrary(rule, "native.java_library", "  "));
+      outputStream.println(formatJavaLibrary(rule, "native.java_library", "  ", prefix));
     }
   }
 

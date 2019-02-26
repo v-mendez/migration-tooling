@@ -122,6 +122,7 @@ public class Resolver {
     Artifact artifact;
     ModelSource modelSource;
     try {
+      logger.info("Resolving artifact from coords: "+ artifactCoord);
       artifact = ArtifactBuilder.fromCoords(artifactCoord);
       modelSource = modelResolver.resolveModel(artifact);
     } catch (UnresolvableModelException | InvalidArtifactCoordinateException e) {
@@ -150,8 +151,9 @@ public class Resolver {
             + model.getGroupId()
             + ":"
             + model.getArtifactId()
-            + ":"
-            + model.getVersion());
+            + ":<<"
+            + model.getVersion()
+            + ">>");
     for (Repository repo : model.getRepositories()) {
       modelResolver.addRepository(repo);
     }
